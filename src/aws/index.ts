@@ -37,7 +37,7 @@ async function uploadFromUrlToS3(
     })
   );
 
-  return `https://d11fvhrhm3cw2o.cloudfront.net/${key}`;
+  return `https://d2qhtu0wg9l2qp.cloudfront.net/${key}`;
 }
 
 awsRoutes.post("/upload-image", async (c) => {
@@ -128,7 +128,7 @@ awsRoutes.post("/upload-image-form", async (c) => {
       })
     );
 
-    const s3Url = `https://${c.env.AWS_S3_BUCKET}.s3.${c.env.AWS_REGION}.amazonaws.com/${key}`;
+    const s3Url = `https://d2qhtu0wg9l2qp.cloudfront.net/${key}`;
     return c.json({
       user_id,
       session_id,
