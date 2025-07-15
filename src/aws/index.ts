@@ -134,7 +134,7 @@ awsRoutes.post("/upload-image-form", async (c) => {
       session_id,
       url: s3Url,
     });
-  } catch (e: any) {
+  } catch (e: any){
     console.error("Upload error:", e);
     return c.json({ error: e.message }, 500);
   }
