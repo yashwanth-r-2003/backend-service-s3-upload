@@ -37,7 +37,7 @@ async function uploadFromUrlToS3(
     })
   );
 
-  return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
+  return `https://d11fvhrhm3cw2o.cloudfront.net/${key}`;
 }
 
 awsRoutes.post("/upload-image", async (c) => {
