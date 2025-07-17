@@ -1,52 +1,29 @@
-import { ERROR_RESPONSE_CODES } from "../utils/constants";
 import { env } from "hono/adapter";
 import { createMiddleware } from "hono/factory";
-import { jwtVerify } from "jose";
+import { HTTPException } from "hono/http-exception";
 
-type Session = {
-  Variables: {
-    userId: string;
-  };
-};
-
-export const authMiddleware = createMiddleware<Session>(async (c, next) => {
+export const adminMiddleware = createMiddleware(async (c, next) => {
   const token = c.req.header("Authorization");
 
   if (!token) {
-    return c.json(
-      {
-        ...ERROR_RESPONSE_CODES[401],
-        details: "No token found",
-      },
-      401
-    );
+    throw new HTTPException(401, {
+      message: "No token found",
+    });
   }
 
   if (!token.startsWith("Bearer ")) {
-    return c.json(
-      {
-        ...ERROR_RESPONSE_CODES[401],
-        details: "Invalid token format",
-      },
-      401
-    );
+    throw new HTTPException(401, {
+      message: "Invalid token format",
+    });
   }
 
-  const jwtToken = token.split("Bearer ")[1];
-  const { JWT_SECRET } = env<{ JWT_SECRET: string }>(c);
-  const secret = new TextEncoder().encode(JWT_SECRET);
+  const adminToken = token.split("Bearer ")[1];
+  const { ADMIN_SECRET } = env<{ ADMIN_SECRET: string }>(c);
 
-  try {
-    const decodedToken = await jwtVerify(jwtToken, secret);
-    c.set("userId", decodedToken.payload.sub as string);
-    await next();
-  } catch (error) {
-    return c.json(
-      {
-        ...ERROR_RESPONSE_CODES[401],
-        details: "Unauthorized",
-      },
-      401
-    );
+  if (adminToken !== ADMIN_SECRET) {
+    throw new HTTPException(401, {
+      message: "Unauthorized",
+    });
   }
+  await next();
 });

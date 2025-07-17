@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { uploadFromUrlToS3, uploadFileBufferToS3 } from "./service";
-import { authMiddleware } from "./middleware/auth"; 
+import { adminMiddleware } from "./middleware/auth"; 
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-app.use("*", authMiddleware);
+app.use("*", adminMiddleware);
 
 app.post("/upload-image", async (c) => {
   const { user_id, session_id, url } = await c.req.json<{
